@@ -1,12 +1,20 @@
 import { useState } from 'react';
 
+import MaskedInputCardNumber from './components/inputCardNumber';
+import MaskedInputValidThru from './components/inputValidThru';
+
 
 import { ReactComponent as Visa } from './assets/visa.svg';
 import { ReactComponent as ContactlessPayment } from './assets/ContactlessPayment.svg';
 import { ReactComponent as ShieldCheck } from './assets/ShieldCheck.svg';
 import { ReactComponent as Question } from './assets/Question.svg';
 
+
 function App() {
+  const [ cardNumber, setCardNumber ] = useState('');
+  const [ validThru, setValidThru ] = useState('');
+
+
   function useMediaQuery(query) {
     const [ matches, setMatches ] = useState(window.matchMedia(query).matches);
 
@@ -25,7 +33,7 @@ function App() {
     const matches = useMediaQuery('(min-width: 640px)');
 
     if (matches) {
-      return <div className='text-[#E5E7EB] flex items-center '><ShieldCheck />&nbsp;Seus dados estão seguros</div>;
+      return <div className='text-[#E5E7EB] flex items-center gap-2'><ShieldCheck />Seus dados estão seguros</div>;
     } else {
       return null;
     }
@@ -35,11 +43,13 @@ function App() {
     const matches = useMediaQuery('(max-width: 640px)');
 
     if (matches) {
-      return <div className='text-[#E5E7EB] flex items-center'><ShieldCheck />&nbsp;Seus dados estão seguros</div>;
+      return <div className='text-[#E5E7EB] flex items-center gap-2'><ShieldCheck />Seus dados estão seguros</div>;
     } else {
       return null;
     }
   }
+
+  
 
 
   return (
@@ -78,7 +88,7 @@ function App() {
 
             <form id="form" className='flex flex-col sm:mt-0'>
               <label for='cardNumber' className='text-[#E5E7EB] font-semibold text-sm mb-1'>Número do cartão</label>
-              <input name='cardNumber' id='cardNumber' type="number" placeholder='4726 **** **** ****' className='border-[#374151] border-[1px] rounded p-4 bg-[#101827] mb-6 text-white box-border focus:outline-none focus:ring-2 focus:ring-[#9747FF] hover:ring-2 hover:ring-[#374151] invalid:border-[#FB7185]'/>
+              <MaskedInputCardNumber value={cardNumber} onChange={(event) => setCardNumber(event.target.value)} />
               
               <label for='name' className='text-[#E5E7EB] font-semibold text-sm mb-1'>Nome do titular</label>
               <input name='name' id='name' type="text" placeholder='Nome como está no cartão' autoCapitalize='characters' autoComplete='off' className='border-[#374151] border-[1px] uppercase rounded p-4 bg-[#101827] mb-6 text-white box-border focus:outline-none focus:ring-2 focus:ring-[#9747FF] hover:ring-2 hover:ring-[#374151] invalid:border-[#FB7185]'/>
@@ -87,7 +97,7 @@ function App() {
               <div className='flex justify-between gap-4'>
                 <div className='flex flex-col'>
                   <label for='name' className='text-[#E5E7EB] font-semibold text-sm mb-1'>Validade</label>
-                  <input name='name' id='name' type="text" placeholder='mm/aa' className='border-[#374151] w-[182px] border-[1px] rounded p-4 bg-[#101827] text-white box-border focus:outline-none focus:ring-2 focus:ring-[#9747FF] hover:ring-2 hover:ring-[#374151] invalid:border-[#FB7185]'/>
+                  <MaskedInputValidThru value={validThru} onChange={(event) => setValidThru(event.target.value)} />
                 </div>
                 
                 <div className='flex flex-col'>
