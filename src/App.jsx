@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import MaskedInputCardNumber from './components/inputCardNumber';
 import MaskedInputValidThru from './components/inputValidThru';
@@ -12,7 +12,38 @@ import { ReactComponent as Question } from './assets/Question.svg';
 
 function App() {
   const [ cardNumber, setCardNumber ] = useState('');
+  
+  const [ cardNumberArray1, setCardNumberArray1 ] = useState('');
+  const [ cardNumberArray2, setCardNumberArray2 ] = useState('');
+  const [ cardNumberArray3, setCardNumberArray3 ] = useState('');
+  const [ cardNumberArray4, setCardNumberArray4 ] = useState('');
+  
+  
+  useEffect(() => {
+    setCardNumberArray1(cardNumber.substring(0, 4))
+    setCardNumberArray2(cardNumber.substring(4, 8))
+    setCardNumberArray3(cardNumber.substring(8, 12))
+    setCardNumberArray4(cardNumber.substring(12))
+  }, [cardNumber]);
+
   const [ validThru, setValidThru ] = useState('');
+
+  const [ month, setMonth ] = useState('');
+  const [ year, setYear ] = useState('')
+
+  useEffect(() => {
+    setMonth(validThru.substring(0, 2))
+    setYear(validThru.substring(2))
+  }, [validThru]);
+
+  const [ name, setName ] = useState('');
+
+  const handleInputChange = (event) => {
+    const inputName = event.target.value;
+    const capitalizedInputName = inputName.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    setName(capitalizedInputName);
+  }
+
 
 
   function useMediaQuery(query) {
@@ -49,8 +80,6 @@ function App() {
     }
   }
 
-  
-
 
   return (
     <div className='box-border font-["Source_Sans_Pro"] bg-[#101827] sm:h-screen sm:pt-[160px] sm:px-[350px]'>
@@ -60,28 +89,52 @@ function App() {
           <div className='flex flex-col sm:flex-row sm:justify-between items-center gap-12'>
 
             <div className='sm:order-last sm:py-4 sm:flex sm:flex-col items-center justify-around sm:gap-8'>
-              <section className='w-[280px] h-[168px] sm:mb-8 bg-black mx-auto sm:mx-0 rounded-2xl border-[#374151] border-[1px] pt-4 pb-6 px-6' id='card'>
-                <div className='flex items-center justify-between mb-10'>
-                  <Visa />
-                  <ContactlessPayment />
-                </div>
-
-                <div className='flex justify-between text-white mb-6 font-semibold tracking-[.25em]'>
-                  <div>4716</div>
-                  <div>8039</div>
-                  <div>02&bull;&bull;</div>
-                  <div>&bull;&bull;&bull;&bull;</div>
-                </div>
-
-                <div className='text-[#F9FAFB] text-sm flex justify-between'>
-                  <p>Seu nome aqui</p>
-                  <div className='flex justify-between text-white mb-6 tracking-[.25em]'>
-                    <span>&bull;&bull;</span>
-                    <span>/</span>
-                    <span>&bull;&bull;</span>
+              <div className='relative'>
+                <section className='w-[280px] h-[168px] sm:mb-8 bg-black mx-auto sm:mx-0 rounded-2xl border-[#374151] border-[1px] pt-4 pb-6 px-6' id='card'>
+                  <div className='flex items-center justify-between mb-10'>
+                    <Visa />
+                    <ContactlessPayment />
                   </div>
-                </div>
-              </section>
+
+                    {
+                      cardNumber == ''
+                      ?
+                      <div className='flex justify-between text-white mb-6 font-semibold tracking-[.25em]'>
+                        <div>4716</div>
+                        <div>8039</div>
+                        <div>02&bull;&bull;</div>
+                        <div>&bull;&bull;&bull;&bull;</div>
+                      </div>
+                      :
+                      <div className='flex justify-between text-white mb-6 font-semibold tracking-[.25em]'>
+                        <div>{cardNumberArray1}</div>
+                        <div>{cardNumberArray2}</div>
+                        <div>{cardNumberArray3}</div>
+                        <div>{cardNumberArray4}</div>
+                      </div>
+                    }
+
+                  <div className='text-[#F9FAFB] text-sm flex justify-between'>
+                    {name == '' ? <p>Seu nome aqui</p> : <p>{name}</p>}
+                    {
+                      validThru == ''
+                      ?
+                      <div className='flex justify-between text-white mb-6 tracking-[.25em]'>
+                        <span>&bull;&bull;</span>
+                        <span>/</span>
+                        <span>&bull;&bull;</span>
+                      </div>
+                      :
+                      <div className='flex justify-between text-white mb-6 tracking-[.25em]'>
+                        <span>{month}</span>
+                        <span>/</span>
+                        <span>{year}</span>
+                      </div>
+                    }
+                  </div>
+                </section>
+
+              </div>
 
               <LargerThan640px />
             </div>
@@ -91,7 +144,7 @@ function App() {
               <MaskedInputCardNumber value={cardNumber} onChange={(event) => setCardNumber(event.target.value)} />
               
               <label for='name' className='text-[#E5E7EB] font-semibold text-sm mb-1'>Nome do titular</label>
-              <input name='name' id='name' type="text" placeholder='Nome como está no cartão' autoCapitalize='characters' autoComplete='off' className='border-[#374151] border-[1px] uppercase rounded p-4 bg-[#101827] mb-6 text-white box-border focus:outline-none focus:ring-2 focus:ring-[#9747FF] hover:ring-2 hover:ring-[#374151] invalid:border-[#FB7185]'/>
+              <input name='name' id='name' type="text" onChange={handleInputChange} placeholder='Nome como está no cartão' maxLength='25' autoCapitalize='characters' autoComplete='off' className='border-[#374151] border-[1px] uppercase rounded p-4 bg-[#101827] mb-6 text-white box-border focus:outline-none focus:ring-2 focus:ring-[#9747FF] hover:ring-2 hover:ring-[#374151] invalid:border-[#FB7185]'/>
               
               
               <div className='flex justify-between gap-4'>
